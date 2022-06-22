@@ -1,0 +1,42 @@
+Source-Makefile: feeds/ugw_wlan_6x/wlan_wave_feed/iwlwav-iw/Makefile
+Build-Depends: libnl safec3 PACKAGE_iw:iw
+
+Package: iwlwav-iw
+Menu: 1
+Version: 1
+Depends: +libc +GCC_LIBSSP:libssp +USE_GLIBC:librt +USE_GLIBC:libpthread +libnl +libsafec3
+Conflicts: 
+Menu-Depends: 
+Provides: 
+Build-Variant: release
+Section: net
+Category: Network
+Repository: base
+Title: iw for Wave
+Maintainer: 
+Source: iwlwav-iw-9198b42e874de8de23d9c46d44b4a9398febf72b.tar.gz
+Type: ipkg
+Description:   iw for Wave
+
+@@
+
+Package: iwlwav-iw-debug
+Menu: 1
+Version: 1
+Depends: +libc +GCC_LIBSSP:libssp +USE_GLIBC:librt +USE_GLIBC:libpthread +libnl +libsafec3
+Conflicts: 
+Menu-Depends: 
+Provides: 
+Build-Variant: debug
+Section: net
+Category: Network
+Repository: base
+Title: iw for Wave with debug information
+Maintainer: 
+Source: iwlwav-iw-9198b42e874de8de23d9c46d44b4a9398febf72b.tar.gz
+Type: ipkg
+Description:   iw for Wave with debug information
+
+@@
+
+

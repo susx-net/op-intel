@@ -1,0 +1,11 @@
+--- a/m4/ax_compiler_flags_cflags.m4	2018-03-03 16:39:34.000000000 +0800
++++ b/m4/ax_compiler_flags_cflags.m4	2021-03-19 22:15:50.387328921 +0800
+@@ -71,7 +71,7 @@
+     # or the equivalent gcc-7.3 variant
+     if test -z "$RETPOLINE_CFLAGS"; then
+         AX_APPEND_COMPILE_FLAGS(
+-          ["-mindirect-branch=thunk-extern -mfunction-return=thunk-extern -mindirect-branch-register -DRETPOLINE"],
++          ["-mindirect-branch-register -DRETPOLINE"],
+           [RETPOLINE_CFLAGS],[$ax_compiler_flags_test])
+     fi
+ 

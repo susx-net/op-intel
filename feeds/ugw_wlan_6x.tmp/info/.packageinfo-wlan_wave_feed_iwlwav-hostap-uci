@@ -1,0 +1,60 @@
+Source-Makefile: feeds/ugw_wlan_6x/wlan_wave_feed/iwlwav-hostap-uci/Makefile
+Build-Depends: openssl libnl safec3
+
+Package: iwlwav-hostap-uci
+Menu: 1
+Version: 2.8-1
+Depends: +libc +GCC_LIBSSP:libssp +USE_GLIBC:librt +USE_GLIBC:libpthread +libopenssl +librt +libnl +safeclibs3
+Conflicts: 
+Menu-Depends: 
+Provides: iwlwav-hostap
+Build-Variant: release
+Section: net
+Category: Network
+Repository: base
+Title: hostapd for Wave
+Maintainer: 
+Source: iwlwav-hostap-uci-4143437c62dd2a8329683bbcb794729897043620.tar.gz
+Type: ipkg
+Description:   IEEE 802.11 AP, IEEE 802.1X/WPA/WPA2/EAP/RADIUS Authenticator
+
+@@
+Config:
+
+
+    config WIRELESS_STA
+      depends on PACKAGE_iwlwav-hostap-uci
+      bool 'Linux WPA/WPA2/IEEE 802.1X Supplicant support'
+      help
+          Linux WPA/WPA2/IEEE 802.1X Supplicant
+@@
+
+Package: iwlwav-hostap-uci-debug
+Menu: 1
+Version: 2.8-1
+Depends: +libc +GCC_LIBSSP:libssp +USE_GLIBC:librt +USE_GLIBC:libpthread +libopenssl +librt +libnl +safeclibs3
+Conflicts: 
+Menu-Depends: 
+Provides: iwlwav-hostap
+Build-Variant: debug
+Section: net
+Category: Network
+Repository: base
+Title: hostapd for Wave with debug information
+Maintainer: 
+Source: iwlwav-hostap-uci-4143437c62dd2a8329683bbcb794729897043620.tar.gz
+Type: ipkg
+Description:   IEEE 802.11 AP, IEEE 802.1X/WPA/WPA2/EAP/RADIUS Authenticator with debug information
+
+@@
+Config:
+
+
+    config WIRELESS_STA-debug
+      depends on PACKAGE_iwlwav-hostap-uci-debug
+      bool 'Linux WPA/WPA2/IEEE 802.1X Supplicant support with debug'
+      help
+          Linux WPA/WPA2/IEEE 802.1X Supplicant with Debug information
+@@
+
+

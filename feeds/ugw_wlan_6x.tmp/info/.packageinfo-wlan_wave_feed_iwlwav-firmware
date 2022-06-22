@@ -1,0 +1,43 @@
+Source-Makefile: feeds/ugw_wlan_6x/wlan_wave_feed/iwlwav-firmware/Makefile
+
+Package: iwlwav-firmware
+Menu: 1
+Version: 0e00b32e
+Depends: +libc +GCC_LIBSSP:libssp +USE_GLIBC:librt +USE_GLIBC:libpthread 
+Conflicts: 
+Menu-Depends: 
+Provides: 
+Build-Variant: release
+Section: utils
+Category: Intel
+Repository: base
+Title: Wave firmware binaries
+Maintainer: Intel Corporation
+Source: iwlwav-firmware-0e00b32e.tar.gz
+Type: ipkg
+Description:  	This package contains wave fw binaries components without Debug Information
+http://www.intel.com
+Intel Corporation
+@@
+
+Package: iwlwav-firmware-debug
+Menu: 1
+Version: 0e00b32e
+Depends: +libc +GCC_LIBSSP:libssp +USE_GLIBC:librt +USE_GLIBC:libpthread 
+Conflicts: 
+Menu-Depends: 
+Provides: 
+Build-Variant: debug
+Section: utils
+Category: Intel
+Repository: base
+Title: Wave firmware binaries
+Maintainer: Intel Corporation
+Source: iwlwav-firmware-0e00b32e.tar.gz
+Type: ipkg
+Description:  	This package contains wave fw binaries components with Debug Information
+http://www.intel.com
+Intel Corporation
+@@
+
+

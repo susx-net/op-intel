@@ -1,0 +1,54 @@
+Source-Makefile: feeds/ugw_wlan_6x/wlan_wave_feed/dwpal_6x-uci/Makefile
+Build-Depends: libnl ncurses safec3 readline iwlwav-hostap-uci iwlwav-iw uci
+
+Package: dwpal_6x-uci
+Menu: 1
+Submenu: UGW Software
+Version: 1.0.0.2-1
+Depends: +libc +GCC_LIBSSP:libssp +USE_GLIBC:librt +USE_GLIBC:libpthread +libnl +librt +safeclibs3 +libncurses +libreadline +iwlwav-hostap-uci
+Conflicts: 
+Menu-Depends: 
+Provides: libdwpal
+Build-Variant: release
+Section: net
+Category: Intel
+Repository: base
+Title: D-WPAL Library
+Maintainer: Intel Corporation
+Source: dwpal_6x-uci-67b5308e4572de8d1239a41d1c1ea5ff3065b141.tar.gz
+Type: ipkg
+Description: 	D-WPAL: Dynamic Wireless Platform Abstraction Layer
+http://www.intel.com
+Intel Corporation
+@@
+Config:
+
+
+@@
+
+Package: dwpal_6x-uci-debug
+Menu: 1
+Submenu: UGW Software
+Version: 1.0.0.2-1
+Depends: +libc +GCC_LIBSSP:libssp +USE_GLIBC:librt +USE_GLIBC:libpthread +libnl +librt +safeclibs3 +libncurses +libreadline +iwlwav-hostap-uci-debug
+Conflicts: 
+Menu-Depends: 
+Provides: libdwpal
+Build-Variant: debug
+Section: net
+Category: Intel
+Repository: base
+Title: D-WPAL Library with debug information
+Maintainer: Intel Corporation
+Source: dwpal_6x-uci-67b5308e4572de8d1239a41d1c1ea5ff3065b141.tar.gz
+Type: ipkg
+Description: 	D-WPAL: Dynamic Wireless Platform Abstraction Layer with debug information
+http://www.intel.com
+Intel Corporation
+@@
+Config:
+
+
+@@
+
+

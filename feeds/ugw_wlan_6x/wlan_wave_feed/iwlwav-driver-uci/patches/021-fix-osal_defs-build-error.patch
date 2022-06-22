@@ -1,0 +1,18 @@
+
+--- a/drivers/net/wireless/intel/iwlwav/wireless/driver/osal_defs.c
++++ b/drivers/net/wireless/intel/iwlwav/wireless/driver/osal_defs.c
+@@ -10,6 +10,14 @@
+ #include "mtlkinc.h"
+ #include "mtlk_osal.h"
+ 
++
++#include <linux/version.h>
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 11, 0)
++#include <linux/sched/signal.h>
++#endif
++
++
++
+ #define LOG_LOCAL_GID   GID_OSAL
+ #define LOG_LOCAL_FID   3
+ 

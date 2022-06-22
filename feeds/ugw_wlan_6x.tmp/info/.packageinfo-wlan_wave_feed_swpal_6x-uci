@@ -1,0 +1,55 @@
+Source-Makefile: feeds/ugw_wlan_6x/wlan_wave_feed/swpal_6x-uci/Makefile
+
+Package: swpal_6x-uci
+Menu: 1
+Submenu: Static WLAN Platform abstraction layer - SWPAL
+Version: 1.0.0.2-1
+Depends: +libc +GCC_LIBSSP:libssp +USE_GLIBC:librt +USE_GLIBC:libpthread +libuci +safeclibs3
+Conflicts: 
+Menu-Depends: 
+Provides: libspal
+Build-Variant: release
+Section: utils
+Category: Intel
+Repository: base
+Title: Intel SWPAL
+Maintainer: Intel Corporation
+Source: swpal_6x-uci-7a899e566228c78582aa8c8b43ff43aa887c985a.tar.gz
+Type: ipkg
+Description: 	Intel SWPAL for WLAN Support
+http://www.intel.com
+Intel Corporation
+@@
+Config:
+
+
+
+@@
+
+Package: swpal_6x-uci-debug
+Menu: 1
+Submenu: Static WLAN Platform abstraction layer - SWPAL
+Version: 1.0.0.2-1
+Depends: +libc +GCC_LIBSSP:libssp +USE_GLIBC:librt +USE_GLIBC:libpthread +libuci +safeclibs3 +swpal_6x-uci
+Conflicts: 
+Menu-Depends: 
+Provides: libspal
+Build-Variant: debug
+Section: utils
+Category: Intel
+Repository: base
+Title: Intel SWPAL DEBUG
+Maintainer: Intel Corporation
+Source: swpal_6x-uci-7a899e566228c78582aa8c8b43ff43aa887c985a.tar.gz
+Type: ipkg
+Description: 	Intel SWPAL for WLAN DEBUG Support
+http://www.intel.com
+Intel Corporation
+@@
+Config:
+
+
+
+@@
+
+

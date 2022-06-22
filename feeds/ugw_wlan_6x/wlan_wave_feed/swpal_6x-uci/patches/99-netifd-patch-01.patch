@@ -1,0 +1,287 @@
+--- a/files/scripts/lib/netifd/hostapd.sh
++++ b/files/scripts/lib/netifd/hostapd.sh
+@@ -295,7 +295,7 @@
+ 		append base_cfg "country_code=$country" "$N"
+ 
+ 		[ "$country_ie" -gt 0 ] && append base_cfg "ieee80211d=1" "$N"
+-		[ "$band" = "5GHz" -a "$doth" -gt 0 ] && {
++		[ "$band" = "5g" -a "$doth" -gt 0 ] && {
+ 			append base_cfg "ieee80211h=1" "$N"
+ 			[ -n "$sub_band_dfs" ] && append base_cfg "sub_band_dfs=$sub_band_dfs" "$N"
+ 			[ -n "$sRadarRssiTh" ] && append base_cfg "sRadarRssiTh=$sRadarRssiTh" "$N"
+@@ -842,6 +842,7 @@
+ 	append bss_conf "disassoc_low_ack=$disassoc_low_ack" "$N"
+ 	append bss_conf "preamble=$short_preamble" "$N"
+ 	append bss_conf "wmm_enabled=$wmm" "$N"
++	append bss_conf "noscan=1" "$N"
+ 	append bss_conf "ignore_broadcast_ssid=$hidden" "$N"
+ 	 [ "$hidden" -gt 0 ] && {
+ 		/usr/bin/logger -s "********* WPS warning! $ifname ignore_broadcast_ssid is set, WPS will be disabled  ***********"
+
+
+
+
+
+
+
+
+
+
+--- a/files/scripts/lib/netifd/wireless/mac80211.sh
++++ b/files/scripts/lib/netifd/wireless/mac80211.sh
+@@ -271,7 +271,7 @@
+ 		[ -n "$he_spr_srg_obss_pd_max_offset" ] && append base_cfg "he_spr_srg_obss_pd_max_offset=$he_spr_srg_obss_pd_max_offset" "$N"
+ 		hw_id=`get_hwid_from_device $phy`
+ 		if [ "$hw_id" = "$WAVE_D2" ]; then
+-			if [ "$band" = "5GHz" ] || [ "$band" = "6GHz" ]; then
++			if [ "$band" = "5g" ] || [ "$band" = "6g" ]; then
+ 				[ -n "$he_phy_preamble_puncturing_rx" ] && append base_cfg "he_phy_preamble_puncturing_rx=$he_phy_preamble_puncturing_rx" "$N"
+ 			fi
+ 		fi
+@@ -304,14 +304,14 @@
+ 	local ht_capab=
+ 
+ 	if [ "$auto_channel" -gt 0 -o "$channel" = "first_non_dfs" ]; then
+-		if [ "$htmode" != "VHT20" ] && [ "$htmode" != "HT20" ]; then
++		if [ "$htmode" != "VHT20" ] && [ "$htmode" != "HT20" ] && [ "$htmode" != "HE20" ] ; then
+ 			ht_capab="[HT40+][HT40-]"
+ 		fi
+ 	else
+ 		case "$htmode" in
+ 			VHT20|HT20) ;;
+-			HT40+|VHT40+) ht_capab="[HT40+]" ;;
+-			HT40-|VHT40-) ht_capab="[HT40-]" ;;
++			HT40+|VHT40+|HE40+) ht_capab="[HT40+]" ;;
++			HT40-|VHT40-|HE40-) ht_capab="[HT40-]" ;;
+ 			*) # 80 or above, add HT40+ if channel allows it
+ 				ht_capab="[HT40+]"
+ 				case "$channel" in
+@@ -366,31 +366,31 @@
+ 
+ 	json_get_values ht_capab
+ 
+-	ieee80211n=
+-	ieee80211ac=
+-	ieee80211ax=
+-	case "$hwmode" in
+-		ng|bgn|n|an) ieee80211n=1 ;;
+-		ac) ieee80211ac=1 ;;
+-		nac|anac)
+-			ieee80211n=1
+-			ieee80211ac=1
+-		;;
+-		ax) ieee80211ax=1 ;;
+-		bgnax)
+-			ieee80211n=1
+-			ieee80211ax=1
+-		;;
+-		anacax)
+-			ieee80211n=1
+-			ieee80211ac=1
+-			ieee80211ax=1
+-		;;
++	ieee80211n=0
++	ieee80211ac=0
++	ieee80211ax=0
++	
++	case "$htmode" in
++		HT*|VHT*|HE*) ieee80211n=1 ;;
+ 	esac
++	
++
++	if [ "$band" = "5g" ]; then
++		case "$htmode" in
++			VHT*|HE*) ieee80211ac=1 ;;
++		esac
++	fi
++	
++	case "$htmode" in
++		HE*) ieee80211ax=1 ;;
++ 	esac
++	
++	echo "ieee80211n=$ieee80211n ieee80211ac=$ieee80211ac ieee80211ax=$ieee80211ax"
++
+ 
+ 	case "$hwmode" in
+ 		*g*) hwmode=g ;;
+-		*b*) hwmode=b ;;
++		*b*) hwmode=g ;;
+ 		*a*) hwmode=a ;;
+ 	esac
+ 
+@@ -437,7 +437,7 @@
+ 
+ 	enable_vht=0
+ 	he_phy_channel_width_set=1
+-	if [ "$band" = "2.4GHz" ]; then
++	if [ "$band" = "2g" ]; then
+ 		[ -n "$obss_interval" ] && append base_cfg "obss_interval=$obss_interval" "$N"
+ 		[ -n "$ieee80211n" ] && enable_vht=1
+ 
+@@ -454,14 +454,14 @@
+ 
+ 	[ -n "$ignore_40_mhz_intolerant" ] && append base_cfg "ignore_40_mhz_intolerant=$ignore_40_mhz_intolerant" "$N"
+ 
+-	if [ "$band" = "6GHz" ]; then
+-		#for 6GHz , ieee8021111ax/HE need to be enabled always
++	if [ "$band" = "6g" ]; then
++		#for 6g , ieee8021111ax/HE need to be enabled always
+ 		ieee80211ax=1
+ 		he_phy_channel_width_set=6
+ 		case "$htmode" in
+-			VHT20|VHT40*)
++			VHT20|VHT40*|HE20|HE40*|HE40)
+ 				he_oper_chwidth=0
+-				if [ "$htmode" = VHT20 ]; then
++				if [ "$htmode" = VHT20] || ["$htmode" = HE20 ]; then
+ 					op_class=131
+ 					he_oper_centr_freq_seg0_idx=$channel
+ 				else
+@@ -500,7 +500,7 @@
+ 
+ 				fi
+ 			;;
+-			VHT80)
++			VHT80|HE80)
+ 				op_class=133
+ 				he_oper_chwidth=1
+ 				case "$channel" in
+@@ -520,7 +520,7 @@
+ 					209|213|217|221) he_oper_centr_freq_seg0_idx=215 ;;
+ 				esac
+ 			;;
+-                        VHT160)
++                        VHT160|HE160)
+ 				op_class=134
+ 				he_oper_chwidth=2
+ 				case "$channel" in
+@@ -555,8 +555,8 @@
+ 
+ 	# 802.11ac
+ 	vht_oper_centr_freq_seg0_idx=0
+-	if [ "$band" = "5GHz" ]; then
+-		if [ "$band" = "5GHz" ]; then
++	if [ "$band" = "5g" ]; then
++		if [ "$band" = "5g" ]; then
+ 			if [ $channel != "acs_smart" ] && [ $channel -gt 161 ]; then
+ 				op_class=125
+ 			else
+@@ -571,17 +571,17 @@
+ 		fi
+ 		he_phy_channel_width_set=6
+ 		case "$htmode" in
+-			VHT20|VHT40*)
++			VHT20|VHT40*|HE20|HE40|HE40*)
+ 				vht_oper_chwidth=0
+-				if [ "$htmode" = "VHT40+" ] || [ "$htmode" = "VHT40" ] || [ "$htmode" = "VHT40-" ]; then
++				if [ "$htmode" = "VHT40+" ] || [ "$htmode" = "VHT40" ] || [ "$htmode" = "VHT40-" ] || [ "$htmode" = "HE40-" ] || [ "$htmode" = "HE40+" ] || [ "$htmode" = "HE40" ]; then
+ 					[ "$htmode" = "VHT40+" ] && vht_oper_centr_freq_seg0_idx=$(($channel+2))
+ 					[ "$htmode" = "VHT40-" ] && vht_oper_centr_freq_seg0_idx=$(($channel-2))
+ 				fi
+ 
+ 			;;
+-			VHT80)
++			VHT80|HE80)
+ 				set_default vht_oper_chwidth 1
+-				#5GHz
++				#5g
+ 					case "$channel" in
+ 						36|40|44|48) vht_oper_centr_freq_seg0_idx=42 ;;
+ 						52|56|60|64) vht_oper_centr_freq_seg0_idx=58 ;;
+@@ -591,9 +591,9 @@
+ 						149|153|157|161) vht_oper_centr_freq_seg0_idx=155 ;;
+ 					esac
+ 			;;
+-			VHT160)
++			VHT160|HE160)
+ 				set_default vht_oper_chwidth 2
+-				#5GHz
++				#5g
+ 					case "$channel" in
+ 						36|40|44|48|52|56|60|64) vht_oper_centr_freq_seg0_idx=50 ;;
+ 						100|104|108|112|116|120|124|128) vht_oper_centr_freq_seg0_idx=114 ;;
+@@ -606,7 +606,7 @@
+ 	append base_cfg "op_class=$op_class" "$N"
+ 	[ "$ieee80211ax" = "1" ] &&  append base_cfg "he_phy_channel_width_set=$he_phy_channel_width_set" "$N"
+ 
+-	if [ "$band" = "6GHz" ]; then
++	if [ "$band" = "6g" ]; then
+ 		[ -n "$he_oper_chwidth" ] && append base_cfg "he_oper_chwidth=$he_oper_chwidth" "$N"
+ 		[ -n "$he_oper_centr_freq_seg0_idx" ] && append base_cfg "he_oper_centr_freq_seg0_idx=$he_oper_centr_freq_seg0_idx" "$N"
+ 		[ -n "$he_oper_centr_freq_seg1_idx" ] && append base_cfg "he_oper_centr_freq_seg1_idx=$he_oper_centr_freq_seg1_idx" "$N"
+@@ -617,7 +617,7 @@
+ 			vht_oper_centr_freq_seg0_idx=0
+ 			vht_oper_centr_freq_seg1_idx=0
+ 		fi
+-		# for 5GHz
++		# for 5g
+ 		if [ "$ieee80211ax" = "1" ]; then
+ 			append base_cfg "he_oper_chwidth=$vht_oper_chwidth" "$N"
+ 			append base_cfg "he_oper_centr_freq_seg0_idx=$vht_oper_centr_freq_seg0_idx" "$N"
+@@ -1128,10 +1128,12 @@
+ 	json_select config
+ 	json_get_vars mode
+ 
+-	echo $ifname | egrep -q "^wlan[0-9]{1,2}\.[0-9]{1,2}$"
++	echo $ifname | egrep -q "^wlan[0-9]{1,2}-[0-9]{1,2}$"
+ 	if [ $? == "0" ]; then
+ 		# ap interface is slave VAP, and is controlled by hostapd.
+ 		json_select ..
++		sleep 2
++		wireless_add_vif "$name" "$ifname"
+ 		return
+ 	fi
+ 
+@@ -1322,9 +1324,9 @@
+ 
+ drv_mac80211_setup_phy() {
+ 	local phys=$(ls /sys/class/ieee80211/)
+-	local path_5g=`uci show | grep "5GHz" | awk -F"." '{print $1 "." $2}' | awk -v RS=  '{$1=$1}1'`
+-	local path_6g=`uci show | grep "6GHz" | awk -F"." '{print $1 "." $2}' | awk -v RS=  '{$1=$1}1'`
+-	local path_24g=`uci show | grep "2.4GHz" | awk -F"." '{print $1 "." $2}' | awk -v RS=  '{$1=$1}1'`
++	local path_5g=`uci show | grep "5g" | awk -F"." '{print $1 "." $2}' | awk -v RS=  '{$1=$1}1'`
++	local path_6g=`uci show | grep "6g" | awk -F"." '{print $1 "." $2}' | awk -v RS=  '{$1=$1}1'`
++	local path_24g=`uci show | grep "2g" | awk -F"." '{print $1 "." $2}' | awk -v RS=  '{$1=$1}1'`
+ 	local idx_5g=1
+ 	local idx_6g=1
+ 	local idx_24g=1
+@@ -1478,7 +1480,7 @@
+ 
+ 	[ "$multibss_enable" = "1" ] && set_default disable_reconf 1
+ 
+-	[ "$band" = "6GHz" ] && set_default disable_reconf 1
++	[ "$band" = "6g" ] && set_default disable_reconf 1
+ 
+ 	if [ "$disable_reconf" = "1" -a "$action" = "reconf" ]; then
+ 		# restart radio since multibss does not support reconf
+
+
+
+
+
+
+--- a/files/scripts/lib/netifd/netifd-wireless.sh	
++++ b/files/scripts/lib/netifd/netifd-wireless.sh	
+@@ -74,10 +74,10 @@
+ 	case "$hwmode" in
+ 		a|b|bg|ng|bgn|bgnax|n|an|nac|ac|anac|ax|anacax) ;;
+ 		*)
+-			if [ "$band" = "5GHz" ]; then
++			if [ "$band" = "5g" ]; then
+ 				hwmode=a
+ 			else
+-				hwmode=bg
++				hwmode=b
+ 			fi
+ 		;;
+ 	esac
+@@ -135,6 +135,9 @@
+ 	local options="$1"
+ 
+ 	json_close_object
++	echo ""
++	echo "_wdev_notify == $(json_dump)"
++	echo ""
+ 	ubus $options call network.wireless notify "$(json_dump)"
+ }
+ 

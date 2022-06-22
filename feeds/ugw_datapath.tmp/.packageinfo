@@ -1,0 +1,22 @@
+Source-Makefile: feeds/ugw_datapath/directconnect_dp/Makefile
+
+Package: kmod-directconnect-dp
+Menu: 1
+Submenu: Intel
+Version: <LINUX_VERSION>+1.2.1-1
+Depends: 
+Conflicts: 
+Menu-Depends: 
+Provides: 
+Section: kernel
+Category: Kernel modules
+Title: DirectConnect datapath driver
+Maintainer: 
+Source: directconnect-dp-1.2.1.tar.xz
+Type: ipkg
+Kernel-Config: CONFIG_DIRECTCONNECT_DP_API=y
+Description:   DirectConnect datapath driver
+
+@@
+
+

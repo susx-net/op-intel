@@ -1,0 +1,23 @@
+Source-Makefile: feeds/ugw_opensource_apps/safec3/Makefile
+
+Package: safeclibs3
+Version: 03032018.0-g570fa5-3.3.0
+Depends: +libc +GCC_LIBSSP:libssp +USE_GLIBC:librt +USE_GLIBC:libpthread @!PACKAGE_libsafec
+Conflicts: 
+Menu-Depends: 
+Provides: libsafec3
+Section: libs
+Category: Libraries
+Repository: base
+Title: Safec library build (default safec library)
+Maintainer: Bo Berry <bberryusa@users.sourceforge.net>
+Source: libsafec3-03032018.0-g570fa5.tar.gz
+License: CISCO SYSTEMS
+LicenseFiles: COPYING
+Type: ipkg
+Description:  This package contains the safec  shared library.
+http://sourceforge.net/projects/safeclib
+Bo Berry <bberryusa@users.sourceforge.net>
+@@
+
+

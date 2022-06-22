@@ -1,0 +1,23 @@
+Source-Makefile: feeds/ugw_wlan_6x/iwlwav-base-files/Makefile
+
+Package: iwlwav-base-files
+Submenu: Base Files
+Version: 1
+Depends: +libc +GCC_LIBSSP:libssp +USE_GLIBC:librt +USE_GLIBC:libpthread +iwlwav-hostap-uci
+Conflicts: 
+Menu-Depends: 
+Provides: 
+Section: base
+Category: Intel
+Repository: base
+Title: Common files for Intel OWRT CPE Systems
+Maintainer: Intel
+Source: 
+Type: ipkg
+Description:  This package contains files and system scripts for OpenWrt,
+ common for all Intel CPE Targets.
+http://www.intel.com/
+Intel
+@@
+
+

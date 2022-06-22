@@ -1,0 +1,43 @@
+Source-Makefile: feeds/ugw_wlan_6x/wlan_wave_feed/lq-wave-300_6x-uci/Makefile
+
+Package: ltq-wlan-wave_6x-uci
+Menu: 1
+Version: 06.01.00
+Depends: +libc +GCC_LIBSSP:libssp +USE_GLIBC:librt +USE_GLIBC:libpthread @+PACKAGE_ltq-devm:FEATURE_DEVM_WIFILAN @+BUSYBOX_CONFIG_WC @+BUSYBOX_CONFIG_WHICH @+BUSYBOX_CONFIG_AWK @+BUSYBOX_CONFIG_FEATURE_AWK_MATH @+BUSYBOX_CONFIG_FIND @+BUSYBOX_CONFIG_FEATURE_FIND_MTIME @+BUSYBOX_CONFIG_FEATURE_FIND_PERM @+BUSYBOX_CONFIG_FEATURE_FIND_TYPE @+BUSYBOX_CONFIG_FEATURE_FIND_XDEV @+BUSYBOX_CONFIG_FEATURE_FIND_NEWER @+BUSYBOX_CONFIG_FEATURE_FIND_INUM @+BUSYBOX_CONFIG_XARGS @+BUSYBOX_CONFIG_LSMOD @+PACKAGE_libuuid @+PACKAGE_uuidgen @+PACKAGE_udev @+PACKAGE_dwpal_6x-uci @+PACKAGE_swpal_6x-uci @+PACKAGE_wav_api_6x-uci @+PACKAGE_iwlwav-hostap-uci @+PACKAGE_iwlwav-iw @+PACKAGE_iwlwav-tools @+PACKAGE_iwlwav-driver-uci @+PACKAGE_iwlwav-firmware
+Conflicts: 
+Menu-Depends: 
+Provides: 
+Build-Variant: release
+Section: utils
+Category: Intel
+Repository: base
+Title: Wave components
+Maintainer: Intel Corporation
+Source: ltq-wlan-wave_6x-uci-06.01.00-ugw-8.5.2-cleanup.tar.gz
+Type: ipkg
+Description:   This package contains wave binaries components without Debug Information
+http://www.intel.com
+Intel Corporation
+@@
+
+Package: ltq-wlan-wave_6x-uci-debug
+Menu: 1
+Version: 06.01.00
+Depends: +libc +GCC_LIBSSP:libssp +USE_GLIBC:librt +USE_GLIBC:libpthread @+PACKAGE_ltq-devm:FEATURE_DEVM_WIFILAN @+BUSYBOX_CONFIG_WC @+BUSYBOX_CONFIG_WHICH @+BUSYBOX_CONFIG_AWK @+BUSYBOX_CONFIG_FEATURE_AWK_MATH @+BUSYBOX_CONFIG_FIND @+BUSYBOX_CONFIG_FEATURE_FIND_MTIME @+BUSYBOX_CONFIG_FEATURE_FIND_PERM @+BUSYBOX_CONFIG_FEATURE_FIND_TYPE @+BUSYBOX_CONFIG_FEATURE_FIND_XDEV @+BUSYBOX_CONFIG_FEATURE_FIND_NEWER @+BUSYBOX_CONFIG_FEATURE_FIND_INUM @+BUSYBOX_CONFIG_XARGS @+BUSYBOX_CONFIG_LSMOD @+PACKAGE_libuuid @+PACKAGE_uuidgen @+PACKAGE_udev @+PACKAGE_dwpal_6x-uci-debug @+PACKAGE_swpal_6x-uci-debug @+PACKAGE_wav_api_6x-uci-debug @+PACKAGE_iwlwav-hostap-uci-debug @+PACKAGE_iwlwav-iw-debug @+PACKAGE_iwlwav-tools-debug @+PACKAGE_iwlwav-driver-uci-debug @+PACKAGE_iwlwav-firmware-debug
+Conflicts: 
+Menu-Depends: 
+Provides: 
+Build-Variant: debug
+Section: utils
+Category: Intel
+Repository: base
+Title: Wave components with debug information
+Maintainer: Intel Corporation
+Source: ltq-wlan-wave_6x-uci-06.01.00-ugw-8.5.2-cleanup.tar.gz
+Type: ipkg
+Description:   This package contains wave binaries components with Debug Information
+http://www.intel.com
+Intel Corporation
+@@
+
+

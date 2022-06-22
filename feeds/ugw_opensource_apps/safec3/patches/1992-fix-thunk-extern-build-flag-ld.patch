@@ -1,0 +1,11 @@
+--- a/m4/ax_compiler_flags_ldflags.m4	2018-03-03 16:39:34.000000000 +0800
++++ b/m4/ax_compiler_flags_ldflags.m4	2021-03-19 22:16:27.215892011 +0800
+@@ -65,7 +65,7 @@
+         [AM_LDFLAGS],[$ax_compiler_flags_test])
+     dnl /usr/bin/ld: warning: -z retpolineplt ignored.
+     case $RETPOLINE_CFLAGS in
+-        *-mretpoline*|*-mindirect-branch=thunk-extern*)
++        *-mretpoline*)
+             AX_APPEND_LINK_FLAGS([-Wl,-z,retpolineplt],
+                 [RETPOLINE_LDFLAGS],[$ax_compiler_flags_test])
+             if test -n "$RETPOLINE_LDFLAGS"; then

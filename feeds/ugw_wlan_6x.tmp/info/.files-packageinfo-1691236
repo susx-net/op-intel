@@ -1,0 +1,9 @@
+iwlwav-base-files
+wlan_wave_feed/dwpal_6x-uci
+wlan_wave_feed/iwlwav-driver-uci
+wlan_wave_feed/iwlwav-firmware
+wlan_wave_feed/iwlwav-hostap-uci
+wlan_wave_feed/iwlwav-iw
+wlan_wave_feed/iwlwav-tools
+wlan_wave_feed/lq-wave-300_6x-uci
+wlan_wave_feed/swpal_6x-uci

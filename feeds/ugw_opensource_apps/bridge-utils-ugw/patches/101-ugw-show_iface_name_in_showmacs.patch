@@ -1,0 +1,88 @@
+--- a/brctl/brctl_cmd.c
++++ b/brctl/brctl_cmd.c
+@@ -375,6 +375,7 @@ static int br_cmd_showmacs(int argc, cha
+ 	int i, n;
+ 	struct fdb_entry *fdb = NULL;
+ 	int offset = 0;
++	char ifname[IFNAMSIZ];
+ 
+ 	for(;;) {
+ 		fdb = realloc(fdb, (offset + CHUNK) * sizeof(struct fdb_entry));
+@@ -398,7 +399,12 @@ static int br_cmd_showmacs(int argc, cha
+ 
+ 	qsort(fdb, offset, sizeof(struct fdb_entry), compare_fdbs);
+ 
++#ifdef FEATURE_BRCTL_SHOWMACS_IFNAME
++	printf("port no\tmac addr\t\tis local?\tageing timer\tiface\n");
++#else
++
+ 	printf("port no\tmac addr\t\tis local?\tageing timer\n");
++#endif
+ 	for (i = 0; i < offset; i++) {
+ 		const struct fdb_entry *f = fdb + i;
+ 		printf("%3i\t", f->port_no);
+@@ -407,6 +413,9 @@ static int br_cmd_showmacs(int argc, cha
+ 		       f->mac_addr[3], f->mac_addr[4], f->mac_addr[5]);
+ 		printf("%s\t\t", f->is_local?"yes":"no");
+ 		br_show_timer(&f->ageing_timer_value);
++#ifdef FEATURE_BRCTL_SHOWMACS_IFNAME
++		printf("\t\t%s", portno_to_iface(f->port_no, brname, ifname));
++#endif
+ 		printf("\n");
+ 	}
+ 	return 0;
+--- a/libbridge/libbridge.h
++++ b/libbridge/libbridge.h
+@@ -116,6 +116,11 @@ extern int br_set_path_cost(const char *
+ 			    int path_cost);
+ extern int br_read_fdb(const char *br, struct fdb_entry *fdbs, 
+ 		       unsigned long skip, int num);
++
++#ifdef FEATURE_BRCTL_SHOWMACS_IFNAME
++extern const char *portno_to_iface(int port_no, const char *brname, char *ifname);
++#endif
++
+ extern int br_set_hairpin_mode(const char *bridge, const char *dev,
+ 			       int hairpin_mode);
+ #endif
+--- a/libbridge/libbridge_init.c
++++ b/libbridge/libbridge_init.c
+@@ -222,3 +222,38 @@ int br_foreach_port(const char *brname,
+ 
+ 	return count;
+ }
++
++#ifdef FEATURE_BRCTL_SHOWMACS_IFNAME
++const char *portno_to_iface(int port_no, const char *brname, char *ifname)
++{
++	int i, count;
++	struct dirent **namelist;
++	char path[SYSFS_PATH_MAX];
++	struct port_info pinfo;
++
++	bzero(ifname, IFNAMSIZ);
++	snprintf(path, SYSFS_PATH_MAX, SYSFS_CLASS_NET "%s/brif", brname);
++	count = scandir(path, &namelist, 0, alphasort);
++	if (count >= 0) {
++		for (i = 0; i < count; i++) {
++			if (namelist[i]->d_name[0] == '.'
++			&& (namelist[i]->d_name[1] == '\0'
++				|| (namelist[i]->d_name[1] == '.'
++				&& namelist[i]->d_name[2] == '\0')))
++				continue;
++
++			if (!(br_get_port_info(brname, namelist[i]->d_name, &pinfo))) {
++				if (port_no == pinfo.port_no) {
++					strcpy(ifname, namelist[i]->d_name);
++					break;
++				}
++			}
++		}
++		for (i = 0; i < count; i++)
++			free(namelist[i]);
++		free(namelist);
++	}
++	return ifname;
++}
++#endif
++

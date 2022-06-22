@@ -1,0 +1,44 @@
+Source-Makefile: feeds/ugw_wlan_6x/wlan_wave_feed/iwlwav-tools/Makefile
+Build-Depends: libnl safec3 dwpal_6x-uci
+
+Package: iwlwav-tools
+Menu: 1
+Version: 6.1.0-1
+Depends: +libc +GCC_LIBSSP:libssp +USE_GLIBC:librt +USE_GLIBC:libpthread +libnl +safeclibs3 +dwpal_6x-uci
+Conflicts: 
+Menu-Depends: 
+Provides: 
+Build-Variant: release
+Section: net
+Category: Network
+Repository: base
+Title: wave SW toolset
+Maintainer: 
+Source: iwlwav-tools-6.1.0.tar.bz2
+Type: ipkg
+Description:   Intel toolset for wave HW
+http://www.intel.com/
+
+@@
+
+Package: iwlwav-tools-debug
+Menu: 1
+Version: 6.1.0-1
+Depends: +libc +GCC_LIBSSP:libssp +USE_GLIBC:librt +USE_GLIBC:libpthread +libnl +safeclibs3 +dwpal_6x-uci-debug
+Conflicts: 
+Menu-Depends: 
+Provides: 
+Build-Variant: debug
+Section: net
+Category: Network
+Repository: base
+Title: wave SW toolset with debug information
+Maintainer: 
+Source: iwlwav-tools-6.1.0.tar.bz2
+Type: ipkg
+Description:   Intel toolset for wave HW with debug information
+http://www.intel.com/
+
+@@
+
+

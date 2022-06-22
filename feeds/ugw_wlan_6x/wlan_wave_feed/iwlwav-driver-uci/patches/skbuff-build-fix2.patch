@@ -1,0 +1,15 @@
+--- a/backport-include/linux/skbuff.h	2021-11-20 23:55:09.869349525 +0800
++++ b/backport-include/linux/skbuff.h	2021-11-20 23:56:05.409172437 +0800
+@@ -379,12 +379,6 @@
+ 	return list_->next;
+ }
+ 
+-#if !LINUX_VERSION_IN_RANGE(4,19,10, 4,20,0)
+-static inline void skb_mark_not_on_list(struct sk_buff *skb)
+-{
+-	skb->next = NULL;
+-}
+-#endif /* 4.19.10 <= x < 4.20 */
+ #endif
+ 
+ #if LINUX_VERSION_IS_LESS(4,11,0)

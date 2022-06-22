@@ -1,0 +1,32 @@
+--- a/iwinfo_nl80211.c	2021-06-10 04:12:08.000000000 +0800
++++ b/iwinfo_nl80211.c	2021-06-17 18:54:34.841615000 +0800
+@@ -2777,7 +2777,28 @@
+ 	return (count >= 0) ? 0 : -1;
+ }
+ 
+-static int nl80211_get_scanlist(const char *ifname, char *buf, int *len)
++
++
++static int w_nl80211_get_scanlist(const char *ifname, char *buf, int *len);
++
++static int nl80211_get_scanlist(const char *ifname, char *buf, int *len){
++	char *res;
++ 	*len = 0;
++	if(strncmp(ifname, "radio", 5)| strncmp(ifname, "wlan", 4)){
++		res = nl80211_ifname2phy(ifname);
++		if(!res){
++			return -1;
++		}
++	}
++	return w_nl80211_get_scanlist(res, buf, len);
++}
++
++
++
++
++
++
++static int w_nl80211_get_scanlist(const char *ifname, char *buf, int *len)
+ {
+ 	char *res;
+ 	int rv, mode;
